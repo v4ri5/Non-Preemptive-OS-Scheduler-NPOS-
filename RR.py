@@ -1,6 +1,7 @@
 from collections import deque
 from Process import Process
 from harvest import harvest_processes
+from CSVCreate import csv_creation
 
 quantum = 2
 
@@ -27,8 +28,9 @@ def rr_schedule(processes, quantum=quantum):
     return scheduled
 
 if __name__ == "__main__":
-    procs, _ = harvest_processes()
+    procs, dropped = harvest_processes()
     scheduled = rr_schedule(procs)
+    csv_creation(scheduled, "CSV_RR.csv")
 
     total_wait = 0
     total_turnaround = 0
