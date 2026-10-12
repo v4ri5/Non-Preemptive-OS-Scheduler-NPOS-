@@ -9,18 +9,19 @@ def rr_schedule(processes, quantum=quantum):
     queue = deque(sorted(processes, key=lambda p: p.arrival))
     time = 0
     scheduled = []
+    remaining = {p.pid: p.burst for p in processes}
 
     while queue:
         process = queue.popleft()
         if process.start is None:
             process.start = max(time, process.arrival)
         time = max(time, process.start)
-        slice_ = min(quantum, process.burst)
+        slice_ = min(quantum, remaining[process.pid])
         time += slice_
-        process.burst -= slice_
+        remaining[process.pid] -= slice_
         process.completion = time
 
-        if process.burst > 0:
+        if remaining[process.pid] > 0:
             queue.append(process)
         else:
             scheduled.append(process)
