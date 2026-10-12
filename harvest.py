@@ -28,6 +28,8 @@ def harvest_processes():
                 DroppedLog.append((pid, burst, arrival))
                 continue
             processes.append(Process(pid, arrival, burst, threads, priority))
+            if len(processes) >= 10:  # Limit to 10 processes
+                break
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess): ## Handles exceptions from process extra process information that we cant use 
             pass
     return processes, DroppedLog
