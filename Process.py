@@ -18,7 +18,7 @@ class Process:
         return self.completion - self.arrival
 
     def wait_time(self):
-        return self.start - self.arrival
+        return self.turnaround_time() - self.burst
 
     def response_time(self):
         return self.start - self.arrival
