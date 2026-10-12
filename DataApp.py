@@ -7,19 +7,40 @@ import pandas as pd
 def create_gantt(df, chart_title):
     fig = go.Figure()
 
+    df = df.sort_values("Start Time").copy()
+
+    # Shift entire schedule so earliest process begins at 0
+    offset = df["Start Time"].min()
+
+    df["Plot Start"] = df["Start Time"] - offset
+    df["Plot Finish"] = df["Completion Time"] - offset
+    df["Duration"] = df["Completion Time"] - df["Start Time"]
+
     for _, row in df.iterrows():
         fig.add_trace(
             go.Bar(
                 y=[str(row["PID"])],
-                x=[row["Completion Time"] - row["Start Time"]],
-                base=row["Start Time"],
+                x=[row["Duration"]],
+                base=[row["Plot Start"]],
                 orientation="h",
-                text=str(row["PID"]),
+
+                # Make short bars easier to see
+                marker_line_width=1,
+
+                customdata=[[
+                    row["Start Time"],
+                    row["Completion Time"],
+                    row["Duration"]
+                ]],
+
                 hovertemplate=(
-                    "PID: %{text}<br>"
-                    "Start: %{base}<br>"
-                    "Finish: %{base+x}<extra></extra>"
+                    f"<b>PID {row['PID']}</b><br>"
+                    "Start: %{customdata[0]:,.0f}<br>"
+                    "Finish: %{customdata[1]:,.0f}<br>"
+                    "Duration: %{customdata[2]:,.0f}"
+                    "<extra></extra>"
                 ),
+
                 showlegend=False
             )
         )
@@ -28,11 +49,35 @@ def create_gantt(df, chart_title):
         title=chart_title,
         xaxis_title="Time",
         yaxis_title="PID",
-        barmode="overlay",
-        height=500
+
+        height=max(500, len(df) * 50),
+
+        bargap=0.15,
+
+        plot_bgcolor="white",
+
+        margin=dict(
+            l=80,
+            r=30,
+            t=70,
+            b=70
+        )
     )
 
-    fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor="lightgray",
+        rangemode="tozero",
+
+        # IMPORTANT: interactive zoom slider
+        rangeslider=dict(visible=True)
+    )
+
+    fig.update_yaxes(
+        autorange="reversed",
+        type="category",
+        showgrid=False
+    )
 
     return fig
 
@@ -71,6 +116,12 @@ app.layout = html.Div([
         "FIFO (Harvested)",
         "FIFO Gantt Chart (Harvested)"
     ),
+
+        create_section(
+        "CSV_Custom_FCFS.csv",
+        "FIFO (Custom)",
+        "FIFO Gantt Chart (Custom)"
+    ),
     
         create_section(
         "CSV_SJF.csv",
@@ -79,16 +130,34 @@ app.layout = html.Div([
     ),
 
         create_section(
+        "CSV_Custom_SJF.csv",
+        "Shortesst Job First (Custom)",
+        "Shortest Job First (Custom)"
+    ),
+
+        create_section(
         "CSV_Priority.csv",
         "Priority (Harvested)",
         "Priority Gantt Chart (Harvested)"
-        ),
+    ),
 
         create_section(
-            "CSV_RR.csv",
-            "Round Robin (Harvested)",
-            "Round Robin Gantt (Harvested)"
-            )
+        "CSV_Custom_Priority.csv",
+        "Priority (Custom)",
+        "Priority (Custom)"
+    ),
+
+        create_section(
+        "CSV_RR.csv",
+        "Round Robin (Harvested)",
+        "Round Robin Gantt (Harvested)"
+    ),
+        
+        create_section(
+        "CSV_Custom_RR.csv",
+        "Round Robin (Custom)",
+        "Round Robin (Custom)"
+    )
 ])
 
 

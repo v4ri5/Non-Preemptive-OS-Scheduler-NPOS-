@@ -16,7 +16,7 @@ def make_specs():
     #makes the specs for the workload
     specs = []
     rng = random.Random(42)
-    for i in range(10):
+    for i in range(12):
         specs.append((i,rng.uniform(0.5, 5.0), 1))
     return specs
 
@@ -33,7 +33,7 @@ def worker(worker_id, burst):
     burn(burst)
     endTime = time.perf_counter()
     CPUEndTime = time.process_time()
-    print({"WorkerID": worker_id, "PID":os.getpid(), "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
+    print({"Worker ID": worker_id, "PID":os.getpid(), "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
     
 if __name__ == "__main__":
     specs = make_specs()
