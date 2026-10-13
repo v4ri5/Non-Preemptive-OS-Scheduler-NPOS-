@@ -110,7 +110,11 @@ def create_section(csv_file, heading, chart_title):
 app = Dash()
 
 app.layout = html.Div([
-
+    create_section(
+        "CSV_Workload.csv",
+        "Workload (Real Processes)",
+        "Workload Gantt Chart"
+    ),
         create_section(
         "CSV_FCFS.csv",
         "FIFO (Harvested)",

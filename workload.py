@@ -36,7 +36,7 @@ def make_specs():
     #makes the specs for the workload
     specs = []
     rng = random.Random(42)
-    for i in range(12):
+    for i in range(12): # Creates 132 processes with random burst times between 0.5 and 5 seconds
         specs.append((i,rng.uniform(0.5, 5.0), 1))
     return specs
 
@@ -56,11 +56,7 @@ def worker(start_event, worker_id, burst, results):
     CPUEndTime = time.process_time()
     results.put({"WorkerID": worker_id, "PID":os.getpid(), "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
 
-
-## Names for CSV File 
-#PID arrival burst threads priority start completion 
-if __name__ == "__main__":
-    specs = make_specs()
+def run_workload(specs):
     workers = []
     start_event = multiprocessing.Event()
     results = multiprocessing.Queue()
@@ -74,13 +70,18 @@ if __name__ == "__main__":
     collected = []
     for spec in specs:
         collected.append(results.get())  # Wait for all workers to finish
-    
-    print(f"All workers started at: {release_time}")
-    print(f"Collected Results: {collected}")
-   
-    write_csv(collected, release_time, "CSV_Workload.csv")
     for p in workers:
         p.join()
+    return collected, release_time
+
+
+if __name__ == "__main__":
+    specs = make_specs()
+    collected, release_time = run_workload(specs)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, "CSV_Workload.csv")
+    write_csv(collected, release_time, csv_path)
+    
         
     
     
