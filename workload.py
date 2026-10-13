@@ -36,7 +36,7 @@ def make_specs():
     #makes the specs for the workload
     specs = []
     rng = random.Random(42)
-    for i in range(10):
+    for i in range(12):
         specs.append((i,rng.uniform(0.5, 5.0), 1))
     return specs
 

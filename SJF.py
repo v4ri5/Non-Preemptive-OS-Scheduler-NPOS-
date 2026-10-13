@@ -12,12 +12,6 @@ def non_preemptive_sjf(processes):
     completed = []
 
 
-    #This will make the arrival times of the processes normalized
-    base = min(p.arrival for p in processes)
-    for p in processes:     
-        p.arrival -= base
-
-
     #Sorts the processes by arrival time and burst
     processes.sort(key=lambda x: (x.arrival, x.burst))
 
