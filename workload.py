@@ -5,13 +5,33 @@
 
 
 #Functions
-
 import os
 import time
 import random
 import multiprocessing
 import psutil
+import csv
+import platform
 
+def write_csv(results, release_time, filename):
+    with open(filename, mode="w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=['PID', 'Start Time', 'Completion Time', 'Worker ID','Burst Time','Response Time','Turnaround Time', 'CPU Used', 'OS'])
+        writer.writeheader()
+        for r in results:
+            row = {
+                "PID": r["PID"],
+                "Start Time": r["StartTime"] - release_time,
+                "Completion Time": r["EndTime"] - release_time,
+                "Worker ID": r["WorkerID"],
+                "Burst Time": r["Burst"],
+                "Response Time": r["StartTime"] - release_time,
+                "Turnaround Time": r["EndTime"] - release_time,
+                "CPU Used": r["CPU_Used"],
+                "OS": platform.system()
+            }
+            writer.writerow(row)
+
+        
 def make_specs():
     #makes the specs for the workload
     specs = []
@@ -25,23 +45,40 @@ def burn(cpu_seconds):
     while cpu_seconds > (time.process_time() - startTime):
         pass
 
-def worker(worker_id, burst):
+def worker(start_event, worker_id, burst, results):
     psutil.Process().cpu_affinity([0]) #binds the process to core 0
+    start_event.wait()  # Wait for the start event
     startTime = time.perf_counter()
     CPUTime = time.process_time()
     #burns the CPU for burst seconds
     burn(burst)
     endTime = time.perf_counter()
     CPUEndTime = time.process_time()
-    print({"WorkerID": worker_id, "PID":os.getpid(), "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
-    
+    results.put({"WorkerID": worker_id, "PID":os.getpid(), "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
+
+
+## Names for CSV File 
+#PID arrival burst threads priority start completion 
 if __name__ == "__main__":
     specs = make_specs()
     workers = []
+    start_event = multiprocessing.Event()
+    results = multiprocessing.Queue()
     for spec in specs:
-        p = multiprocessing.Process(target=worker, args=(spec[0], spec[1]))
+        p = multiprocessing.Process(target=worker, args=(start_event, spec[0], spec[1], results))
         p.start()
         workers.append(p)
+    time.sleep(2)
+    release_time = time.perf_counter()
+    start_event.set()  # Signal all workers to start
+    collected = []
+    for spec in specs:
+        collected.append(results.get())  # Wait for all workers to finish
+    
+    print(f"All workers started at: {release_time}")
+    print(f"Collected Results: {collected}")
+   
+    write_csv(collected, release_time, "CSV_Workload.csv")
     for p in workers:
         p.join()
         
