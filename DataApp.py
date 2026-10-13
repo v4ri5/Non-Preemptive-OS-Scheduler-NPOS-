@@ -110,21 +110,35 @@ def create_section(csv_file, heading, chart_title):
 app = Dash()
 
 app.layout = html.Div([
-    create_section(
-        "CSV_Workload.csv",
-        "Workload (Real Processes)",
-        "Workload Gantt Chart"
+        create_section(
+                "CSV_Workload.csv",
+                "Workload (Custom Processes)",
+                "Workload Gantt Chart"
+    ),
+        create_section(
+                "CSV_Predict_FCFS.csv",
+                "FCFS (Custom Processes)",
+                "FCFS Gantt Chart"
+    ),
+        create_section(
+                "CSV_Predict_SJF.csv",
+                "SJF (Custom Processes)",
+                "SJF Gantt Chart"   
+    ),
+        create_section(
+                "CSV_Predict_Priority.csv",
+                "Priority (Custom Processes)",
+                "Priority Gantt Chart"
+    ),
+        create_section(
+                "CSV_Predict_RR.csv",
+                "Round Robin (Custom Processes)",
+                "Round Robin Gantt Chart"
     ),
         create_section(
         "CSV_FCFS.csv",
         "FIFO (Harvested)",
         "FIFO Gantt Chart (Harvested)"
-    ),
-
-        create_section(
-        "CSV_Custom_FCFS.csv",
-        "FIFO (Custom)",
-        "FIFO Gantt Chart (Custom)"
     ),
     
         create_section(
@@ -134,33 +148,15 @@ app.layout = html.Div([
     ),
 
         create_section(
-        "CSV_Custom_SJF.csv",
-        "Shortesst Job First (Custom)",
-        "Shortest Job First (Custom)"
-    ),
-
-        create_section(
         "CSV_Priority.csv",
         "Priority (Harvested)",
         "Priority Gantt Chart (Harvested)"
     ),
 
         create_section(
-        "CSV_Custom_Priority.csv",
-        "Priority (Custom)",
-        "Priority (Custom)"
-    ),
-
-        create_section(
         "CSV_RR.csv",
         "Round Robin (Harvested)",
         "Round Robin Gantt (Harvested)"
-    ),
-        
-        create_section(
-        "CSV_Custom_RR.csv",
-        "Round Robin (Custom)",
-        "Round Robin (Custom)"
     )
 ])
 

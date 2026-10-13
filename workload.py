@@ -15,14 +15,14 @@ import platform
 
 def write_csv(results, release_time, filename):
     with open(filename, mode="w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=['PID', 'Start Time', 'Completion Time', 'Worker ID','Burst Time','Response Time','Turnaround Time', 'CPU Used', 'OS'])
+        writer = csv.DictWriter(file, fieldnames=['PID', 'Start Time', 'Completion Time', 'OS PID','Burst Time','Response Time','Turnaround Time', 'CPU Used', 'OS'])
         writer.writeheader()
         for r in results:
             row = {
-                "PID": r["PID"],
+                "OS PID": r["OS PID"],
                 "Start Time": r["StartTime"] - release_time,
                 "Completion Time": r["EndTime"] - release_time,
-                "Worker ID": r["WorkerID"],
+                "PID": r["PID"],
                 "Burst Time": r["Burst"],
                 "Response Time": r["StartTime"] - release_time,
                 "Turnaround Time": r["EndTime"] - release_time,
@@ -36,8 +36,8 @@ def make_specs():
     #makes the specs for the workload
     specs = []
     rng = random.Random(42)
-    for i in range(12): # Creates 132 processes with random burst times between 0.5 and 5 seconds
-        specs.append((i,rng.uniform(0.5, 5.0), 1))
+    for i in range(12): # Creates 12 processes with random burst times between 0.5 and 5 seconds
+        specs.append((i,rng.uniform(1, 10), 1, rng.randint(1,5))) # (PID, Burst Time, Threads, Priority)
     return specs
 
 def burn(cpu_seconds):
@@ -54,7 +54,7 @@ def worker(start_event, worker_id, burst, results):
     burn(burst)
     endTime = time.perf_counter()
     CPUEndTime = time.process_time()
-    results.put({"WorkerID": worker_id, "PID":os.getpid(), "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
+    results.put({"OS PID": os.getpid(), "PID":worker_id, "Burst": burst, "StartTime": startTime, "EndTime": endTime, "CPU_Used": (CPUEndTime - CPUTime)})
 
 def run_workload(specs):
     workers = []
@@ -81,6 +81,8 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     csv_path = os.path.join(script_dir, "CSV_Workload.csv")
     write_csv(collected, release_time, csv_path)
+    
+    print(f"Workload completed. Results written to {csv_path}")
     
         
     
