@@ -35,9 +35,9 @@ def create_gantt(df, chart_title):
 
                 hovertemplate=(
                     f"<b>PID {row['PID']}</b><br>"
-                    "Start: %{customdata[0]:,.0f}<br>"
-                    "Finish: %{customdata[1]:,.0f}<br>"
-                    "Duration: %{customdata[2]:,.0f}"
+                    "Start: %{customdata[0]:,.000f}<br>"
+                    "Finish: %{customdata[1]:,.000f}<br>"
+                    "Duration: %{customdata[2]:,.000f}"
                     "<extra></extra>"
                 ),
 
