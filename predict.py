@@ -19,7 +19,13 @@ def make_processes(specs):
        
     return processes
 
-if __name__ == "__main__": 
+def set_cpu_util(processes):
+    # Average CPU utilization from arrival until the process finished
+    for p in processes:
+        elapsed = p.turnaround_time()
+        p.cpu_percent = (p.burst / elapsed) * 100 if elapsed > 0 else 0
+
+if __name__ == "__main__":
     specs = make_specs()
     fcfs_processes = make_processes(specs)
     sjf_processes = make_processes(specs)
@@ -30,6 +36,11 @@ if __name__ == "__main__":
     SJF.non_preemptive_sjf(sjf_processes)
     PrioritySchedule.priority_scheduling(priority_processes)
     RR.rr_schedule(RR_processes, quantum=1)
+
+    set_cpu_util(fcfs_processes)
+    set_cpu_util(sjf_processes)
+    set_cpu_util(priority_processes)
+    set_cpu_util(RR_processes)
     
     csv_creation(fcfs_processes, "CSV_Predict_FCFS.csv")
     csv_creation(sjf_processes, "CSV_Predict_SJF.csv")

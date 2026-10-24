@@ -3,7 +3,7 @@
 # and methods to calculate turnaround time, wait time, and response time.
 import psutil
 class Process:
-    def __init__(self, pid, arrival, burst, threads, priority):
+    def __init__(self, pid, arrival, burst, threads, priority, cpu_util=0):
         self.pid = pid
         self.arrival = arrival
         self.burst = burst
@@ -12,7 +12,8 @@ class Process:
         self.start = None
         self.completion = None
         self.state = "new"
-        self.slices = [] 
+        self.slices = []
+        self.cpu_percent = cpu_util
 
 
     def turnaround_time(self):
@@ -33,4 +34,4 @@ class Process:
                f"Waiting Time: {self.wait_time():.2f}, "
                f"Turnaround Time: {self.turnaround_time():.2f}, "
                f"Response Time: {self.response_time():.2f}, "
-               f"State={self.state}")
+               f"Utilization={self.cpu_percent}")

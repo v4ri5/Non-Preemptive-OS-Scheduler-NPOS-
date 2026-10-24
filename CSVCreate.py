@@ -11,7 +11,7 @@ def csv_creation(processes, filename = "resultsSJF.csv"):
         writer.writerow([
             "PID", "Arrival Time", "Burst Time", "Threads", "Start Time",
             "Completion Time", "Waiting Time", "Turnaround Time",
-            "Response Time", "State"
+            "Response Time", "CPU Utilization"
             ])
         
         #writes data for rows
@@ -19,7 +19,7 @@ def csv_creation(processes, filename = "resultsSJF.csv"):
             writer.writerow([
                 p.pid, round(p.arrival, 2), round(p.burst, 2), p.threads,
                 round(p.start, 2), round(p.completion, 2), round(p.wait_time(), 2),
-                round(p.turnaround_time(), 2), round(p.response_time(), 2)
+                round(p.turnaround_time(), 2), round(p.response_time(), 2), f"{p.cpu_percent:.8f}"
             ])
 
 
@@ -31,7 +31,7 @@ def custom_csv_creation(processes, filename = "resultsSJF.csv"):
         writer.writerow([
             "PID", "Arrival Time", "Burst Time", "Threads", "Start Time",
             "Completion Time", "Waiting Time", "Turnaround Time",
-            "Response Time", "State"
+            "Response Time"
             ])
         
         #writes data for rows

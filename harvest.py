@@ -1,4 +1,5 @@
 import psutil
+import time
 from Process import Process
 
 
@@ -56,6 +57,14 @@ def harvest_processes():
                 else 0
             )
 
+            # Average CPU utilization since the process was created
+            elapsed = time.time() - arrival
+            cpu_util = (
+                (burst / elapsed) * 100
+                if elapsed > 0
+                else 0
+            )
+
             # -------------------------------------------------
             # Filter processes we don't want
             # -------------------------------------------------
@@ -81,7 +90,8 @@ def harvest_processes():
                     arrival,
                     burst,
                     threads,
-                    priority
+                    priority,
+                    cpu_util
                 )
             )
 

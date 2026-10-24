@@ -118,24 +118,24 @@ app = Dash()
 
 app.layout = html.Div([
         create_section(
-                "CSV_Workload.csv",
-                "Workload (Custom Processes)",
-                "Workload Gantt Chart"
+        "CSV_Workload.csv",
+        "Workload (Custom Processes)",
+        "Workload Gantt Chart"
     ),
         create_section(
-                "CSV_Predict_FCFS.csv",
-                "FCFS (Custom Processes)",
-                "FCFS Gantt Chart"
+        "CSV_Predict_FCFS.csv",
+        "FCFS (Custom Processes)",
+        "FCFS Gantt Chart"
     ),
         create_section(
-                "CSV_Predict_SJF.csv",
-                "SJF (Custom Processes)",
-                "SJF Gantt Chart"   
+        "CSV_Predict_SJF.csv",
+        "SJF (Custom Processes)",
+        "SJF Gantt Chart"   
     ),
         create_section(
-                "CSV_Predict_Priority.csv",
-                "Priority (Custom Processes)",
-                "Priority Gantt Chart"
+        "CSV_Predict_Priority.csv",
+        "Priority (Custom Processes)",
+        "Priority Gantt Chart"
     ),
         create_section(
                 "CSV_Predict_RR.csv",

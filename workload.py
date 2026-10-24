@@ -15,9 +15,12 @@ import platform
 
 def write_csv(results, release_time, filename):
     with open(filename, mode="w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=['PID', 'Start Time', 'Completion Time', 'OS PID','Burst Time','Response Time','Turnaround Time', 'CPU Used', 'OS'])
+        writer = csv.DictWriter(file, fieldnames=['PID', 'Start Time', 'Completion Time', 'OS PID','Burst Time','Response Time','Turnaround Time', 'CPU Used', 'CPU Utilization', 'OS'])
         writer.writeheader()
         for r in results:
+            # Average CPU utilization from release until the process finished
+            elapsed = r["EndTime"] - release_time
+            cpu_util = (r["CPU_Used"] / elapsed) * 100 if elapsed > 0 else 0
             row = {
                 "OS PID": r["OS PID"],
                 "Start Time": r["StartTime"] - release_time,
@@ -27,6 +30,7 @@ def write_csv(results, release_time, filename):
                 "Response Time": r["StartTime"] - release_time,
                 "Turnaround Time": r["EndTime"] - release_time,
                 "CPU Used": r["CPU_Used"],
+                "CPU Utilization": f"{cpu_util:.8f}",
                 "OS": platform.system()
             }
             writer.writerow(row)
