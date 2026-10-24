@@ -81,12 +81,19 @@ def create_gantt(df, chart_title):
 
     return fig
 
+# renames slice columns so create_gantt can draw them
+def slices_to_gantt(slices_df):
+    return slices_df.rename(columns={"Start": "Start Time", "End": "Completion Time"})
+
 # creates gantt chart and table for page using csv file
-def create_section(csv_file, heading, chart_title):
-
+def create_section(csv_file, heading, chart_title, slices_file=None):
+    
     df = pd.read_csv(csv_file)
-
-    fig = create_gantt(df, chart_title)
+    # round robin passes a slices file so slices get their own bar
+    if slices_file:
+        fig = create_gantt(slices_to_gantt(pd.read_csv(slices_file)), chart_title)
+    else:
+        fig = create_gantt(df, chart_title)
 
     return html.Div([
 
@@ -133,7 +140,8 @@ app.layout = html.Div([
         create_section(
                 "CSV_Predict_RR.csv",
                 "Round Robin (Custom Processes)",
-                "Round Robin Gantt Chart"
+                "Round Robin Gantt Chart",
+                "CSV_Predict_RR_Slices.csv"
     ),
         create_section(
         "CSV_FCFS.csv",
@@ -156,7 +164,8 @@ app.layout = html.Div([
         create_section(
         "CSV_RR.csv",
         "Round Robin (Harvested)",
-        "Round Robin Gantt (Harvested)"
+        "Round Robin Gantt (Harvested)",
+        "CSV_RR_Slices.csv"
     )
 ])
 

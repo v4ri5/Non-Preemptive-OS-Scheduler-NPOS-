@@ -12,6 +12,7 @@ class Process:
         self.start = None
         self.completion = None
         self.state = "new"
+        self.slices = [] 
 
 
     def turnaround_time(self):

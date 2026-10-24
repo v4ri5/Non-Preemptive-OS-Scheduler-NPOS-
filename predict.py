@@ -2,7 +2,7 @@
 import Process
 from workload import make_specs
 import CSVCreate
-from CSVCreate import csv_creation
+from CSVCreate import csv_creation, slices_csv
 
 
 #Schedulers
@@ -35,6 +35,7 @@ if __name__ == "__main__":
     csv_creation(sjf_processes, "CSV_Predict_SJF.csv")
     csv_creation(priority_processes, "CSV_Predict_Priority.csv")
     csv_creation(RR_processes, "CSV_Predict_RR.csv")
+    slices_csv(RR_processes, "CSV_Predict_RR_Slices.csv")
 
 
 

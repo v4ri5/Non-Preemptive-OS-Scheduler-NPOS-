@@ -1,7 +1,7 @@
 from collections import deque
 from Process import Process
 from harvest import harvest_processes
-from CSVCreate import csv_creation
+from CSVCreate import csv_creation, slices_csv
 
 quantum = 2
 
@@ -17,6 +17,7 @@ def rr_schedule(processes, quantum=quantum):
             process.start = max(time, process.arrival)
         time = max(time, process.start)
         slice_ = min(quantum, remaining[process.pid])
+        process.slices.append((time, time + slice_))
         time += slice_
         remaining[process.pid] -= slice_
         process.completion = time
@@ -32,6 +33,7 @@ if __name__ == "__main__":
     procs, dropped = harvest_processes()
     scheduled = rr_schedule(procs)
     csv_creation(scheduled, "CSV_RR.csv")
+    slices_csv(scheduled, "CSV_RR_Slices.csv")
 
     total_wait = 0
     total_turnaround = 0
