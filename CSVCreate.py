@@ -1,10 +1,17 @@
 from Process import Process
 from harvest import harvest_processes
 import csv
+import os
 from SJF import non_preemptive_sjf
 
+# folder this file lives in, so CSVs always land in the project folder
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def project_path(filename):
+    return os.path.join(PROJECT_DIR, filename)
+
 def csv_creation(processes, filename = "resultsSJF.csv"):
-    with open(filename, mode="w", newline="") as file:
+    with open(project_path(filename), mode="w", newline="") as file:
         writer = csv.writer(file)
 
         #makes the header row
@@ -24,7 +31,7 @@ def csv_creation(processes, filename = "resultsSJF.csv"):
 
 
 def custom_csv_creation(processes, filename = "resultsSJF.csv"):
-    with open(filename, mode="w", newline="") as file:
+    with open(project_path(filename), mode="w", newline="") as file:
         writer = csv.writer(file)
 
         #makes the header row
@@ -44,7 +51,7 @@ def custom_csv_creation(processes, filename = "resultsSJF.csv"):
 
 
 def slices_csv(processes, filename = "CSV_RR_Slices.csv"):
-    with open (filename, mode="w", newline="") as file:
+    with open(project_path(filename), mode="w", newline="") as file:
         writer = csv.writer(file)
 
         #makes the header row

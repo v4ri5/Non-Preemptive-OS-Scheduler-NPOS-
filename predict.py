@@ -35,7 +35,7 @@ if __name__ == "__main__":
     FCFS.fcfs_schedule(fcfs_processes)
     SJF.non_preemptive_sjf(sjf_processes)
     PrioritySchedule.priority_scheduling(priority_processes)
-    RR.rr_schedule(RR_processes, quantum=1)
+    RR.rr_schedule(RR_processes, quantum=5)
 
     set_cpu_util(fcfs_processes)
     set_cpu_util(sjf_processes)

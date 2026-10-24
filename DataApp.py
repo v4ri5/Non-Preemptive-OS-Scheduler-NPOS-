@@ -2,6 +2,10 @@ from dash import Dash, html, dcc
 import plotly.graph_objects as go
 import dash_ag_grid as dag
 import pandas as pd
+import os
+
+# CSVs are stored next to this file in the project folder
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def create_gantt(df, chart_title):
@@ -88,10 +92,10 @@ def slices_to_gantt(slices_df):
 # creates gantt chart and table for page using csv file
 def create_section(csv_file, heading, chart_title, slices_file=None):
     
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(os.path.join(PROJECT_DIR, csv_file))
     # round robin passes a slices file so slices get their own bar
     if slices_file:
-        fig = create_gantt(slices_to_gantt(pd.read_csv(slices_file)), chart_title)
+        fig = create_gantt(slices_to_gantt(pd.read_csv(os.path.join(PROJECT_DIR, slices_file))), chart_title)
     else:
         fig = create_gantt(df, chart_title)
 
@@ -117,11 +121,6 @@ def create_section(csv_file, heading, chart_title, slices_file=None):
 app = Dash()
 
 app.layout = html.Div([
-        create_section(
-        "CSV_Workload.csv",
-        "Workload (Custom Processes)",
-        "Workload Gantt Chart"
-    ),
         create_section(
         "CSV_Predict_FCFS.csv",
         "FCFS (Custom Processes)",
