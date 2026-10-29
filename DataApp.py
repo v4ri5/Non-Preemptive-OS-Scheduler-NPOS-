@@ -137,10 +137,10 @@ app.layout = html.Div([
         "Priority Gantt Chart"
     ),
         create_section(
-                "CSV_Predict_RR.csv",
-                "Round Robin (Custom Processes)",
-                "Round Robin Gantt Chart",
-                "CSV_Predict_RR_Slices.csv"
+        "CSV_Predict_RR.csv",
+        "Round Robin (Custom Processes)",
+        "Round Robin Gantt Chart",
+        "CSV_Predict_RR_Slices.csv"
     ),
         create_section(
         "CSV_FCFS.csv",

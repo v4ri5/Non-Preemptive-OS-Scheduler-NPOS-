@@ -14,14 +14,6 @@ def harvest_processes():
     # Time when the computer was booted
     floor = psutil.boot_time()
 
-    # ---------------------------------------------------------
-    # STEP 1:
-    # Collect ALL valid processes first.
-    #
-    # Do NOT stop after finding 12 because we need to examine
-    # every process before determining which 12 have arrival
-    # times closest together.
-    # ---------------------------------------------------------
     for proc in psutil.process_iter([
         'pid',
         'create_time',
@@ -65,10 +57,6 @@ def harvest_processes():
                 else 0
             )
 
-            # -------------------------------------------------
-            # Filter processes we don't want
-            # -------------------------------------------------
-
             # Ignore processes with almost no CPU time
             if burst < 0.01:
                 dropped_log.append(
@@ -104,17 +92,9 @@ def harvest_processes():
             # Just skip them.
             continue
 
-    # ---------------------------------------------------------
-    # STEP 2:
-    # Sort every valid process by arrival time.
-    # ---------------------------------------------------------
+    
     processes.sort(key=lambda p: p.arrival)
 
-    # ---------------------------------------------------------
-    # STEP 3:
-    # Find the group of 12 consecutive processes whose
-    # arrival times have the smallest overall span.
-    # ---------------------------------------------------------
 
     if len(processes) > PROCESS_LIMIT:
 
@@ -151,13 +131,6 @@ def harvest_processes():
             best_start + PROCESS_LIMIT
         ]
 
-    # ---------------------------------------------------------
-    # STEP 4:
-    # Normalize arrival times.
-    #
-    # Earliest selected process becomes arrival time 0.
-    # All other arrival times remain relative to it.
-    # ---------------------------------------------------------
 
     if processes:
 
@@ -166,9 +139,5 @@ def harvest_processes():
         for process in processes:
             process.arrival -= earliest_arrival
 
-    # ---------------------------------------------------------
-    # STEP 5:
-    # Return selected processes and dropped processes
-    # ---------------------------------------------------------
 
     return processes, dropped_log

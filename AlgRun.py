@@ -30,7 +30,7 @@ completedPriority = priority_scheduling(hProcesses)
 csv_creation(completedPriority,"CSV_Priority.csv")
 
 #Round Robin
-completedRR = rr_schedule(hProcesses, quantum=5)
+completedRR = rr_schedule(hProcesses)
 
 csv_creation(completedRR,"CSV_RR.csv")
 slices_csv(completedRR,"CSV_RR_Slices.csv")
