@@ -1,4 +1,5 @@
 #Utilities
+import random
 import Process
 from workload import make_specs
 import CSVCreate
@@ -15,7 +16,7 @@ import RR
 def make_processes(specs):
     processes = []
     for spec in specs:
-        processes.append(Process.Process(spec[0], 0, spec[1], spec[2], spec[3]))
+        processes.append(Process.Process(spec[0], random.randint(0, 11), spec[1], spec[2], spec[3]))
        
     return processes
 
